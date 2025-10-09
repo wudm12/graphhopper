@@ -43,7 +43,20 @@
 ### 7. testHasTurnCosts
 - **Intention :** Vérifier que `hasTurnCosts()` retourne `true` si un `TurnCostProvider` est configuré.  
 - **Données de test :** `TurnCostStorage` non nul, `uTurnCosts = 5.0`.  
-- **Oracle attendu :** `true`.  
+- **Oracle attendu :** `true`. 
+
+
+## Preuves d’exécution & couverture
+
+### Exécution des tests 
+![Console – 7 tests OK](docs/images/capture-test.png)
+
+### Couverture (JaCoCo) – Vue d’ensemble Core
+![JaCoCo – Core](docs/images/jacoco-core-overview.png)
+
+### Couverture (JaCoCo) – Détail SpeedWeighting
+![JaCoCo – SpeedWeighting](docs/images/speedweighting.png)
+
 
 -----
 
