@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import com.github.javafaker.Faker;
 
 /**
  * Tests for SpeedWeighting.
@@ -112,4 +113,42 @@ public class SpeedWeightingTest {
 
         assertTrue(sw.hasTurnCosts());
     }
+
+
+    /**
+     * Test 8: calcEdgeWeight() avec des données générées par Faker.
+     * Utilise java-faker pour simuler des distances et vitesses réalistes.
+     */
+    @Test
+    void testCalcEdgeWeightWithFaker() {
+        com.github.javafaker.Faker faker = new com.github.javafaker.Faker();
+
+
+        double distance = faker.number().numberBetween(100, 5000);
+
+
+        double speed = faker.number().numberBetween(10, 130);
+
+        when(edge.getDistance()).thenReturn(distance);
+        when(edge.get(speedEnc)).thenReturn(speed);
+
+        SpeedWeighting sw = new SpeedWeighting(speedEnc);
+        double result = sw.calcEdgeWeight(edge, false);
+
+
+        double expected = distance / speed;
+        assertEquals(expected, result, 1e-6);
+    }
+
+    @Test
+    void testGetNameWithFaker() {
+        Faker faker = new Faker();
+        // On génère une donnée aléatoire (ici un mot), même si la méthode testée ne l'utilise pas.
+        String randomString = faker.lorem().word();
+
+        SpeedWeighting sw = new SpeedWeighting(speedEnc);
+        assertEquals("speed", sw.getName(),
+                "getName() doit toujours retourner 'speed' même si on manipule des données Faker: " + randomString);
+    }
+
 }
