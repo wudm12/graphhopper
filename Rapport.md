@@ -43,7 +43,18 @@
 ### 7. testHasTurnCosts
 - **Intention :** Vérifier que `hasTurnCosts()` retourne `true` si un `TurnCostProvider` est configuré.  
 - **Données de test :** `TurnCostStorage` non nul, `uTurnCosts = 5.0`.  
-- **Oracle attendu :** `true`. 
+- **Oracle attendu :** `true`.
+
+
+Nouveau test : testCalcEdgeWeightWithFakerDeterministic
+
+Intention : Vérifier le bon calcul du poids avec des valeurs aléatoires mais déterministes générées par java-faker.
+
+Données de test : distance et vitesse générées via Faker(new Random(12345)).
+
+Oracle attendu : Résultat = distance / speed.
+
+Justification : ce test montre l’usage d’un générateur de données réalistes pour améliorer la variabilité et la robustesse des tests.
 
 
 ## Preuves d’exécution & couverture
