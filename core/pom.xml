@@ -150,13 +150,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--  AJOUT : Faker pour générer des données de test -->
-        <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -173,31 +166,6 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.pitest</groupId>
-                    <artifactId>pitest-maven</artifactId>
-                    <version>1.15.8</version>
-                    <configuration>
-                        <argLine>-Xmx1024m</argLine>
-                        <useClasspathJar>false</useClasspathJar>
-                        <targetClasses>
-                            <param>com.graphhopper.routing.weighting.SpeedWeighting</param>
-                        </targetClasses>
-                        <targetTests>
-                            <param>com.graphhopper.routing.weighting.SpeedWeightingTest</param>
-                        </targetTests>
-
-                        <excludedTestClasses>
-                            <param>com.graphhopper.routing.weighting.SpeedWeightingTest</param>
-                        </excludedTestClasses>
-
-
-                        <mutators>
-                            <mutator>ALL</mutator>
-                        </mutators>
-                    </configuration>
                 </plugin>
 
                 <plugin>
