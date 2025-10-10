@@ -97,13 +97,13 @@ Ces survivants indiquent que des cas spécifiques ne sont pas encore couverts pa
 
 ## Étape 6 – Intégration de JavaFaker
 
-Nous avons ajouté la librairie [java-faker](https://github.com/DiUS/java-faker) au projet via Maven :
+Nouveau test : testCalcEdgeWeightWithFakerDeterministic
 
-```xml
-<dependency>
-    <groupId>com.github.javafaker</groupId>
-    <artifactId>javafaker</artifactId>
-    <version>1.0.2</version>
-    <scope>test</scope>
-</dependency>
+Intention : Vérifier le bon calcul du poids avec des valeurs aléatoires mais déterministes générées par java-faker.
+
+Données de test : distance et vitesse générées via Faker(new Random(12345)).
+
+Oracle attendu : Résultat = distance / speed.
+
+Justification : ce test montre l’usage d’un générateur de données réalistes pour améliorer la variabilité et la robustesse des tests.
 
