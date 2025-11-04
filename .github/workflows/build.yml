@@ -36,4 +36,53 @@ jobs:
             ${{ runner.os}}-node_modules-
       - name: Build ${{ matrix.java-version }}
         run: mvn -B clean test
+      - name: Run PIT Mutation Testing
+        run: mvn org.pitest:pitest-maven:mutationCoverage
 
+      - name: Extract current PIT score
+        id: current
+        run: |
+          SCORE=$(grep -oPm1 "(?<=<score>)[^<]+" target/pit-reports/*/summary.xml || echo 0)
+          echo "current_score=$SCORE" >> $GITHUB_OUTPUT
+          echo "Current mutation score: $SCORE"
+
+      - name: Get previous PIT score
+        id: previous
+        run: |
+          if [ -f mutation_score.txt ]; then
+            PREV=$(cat mutation_score.txt)
+          else
+            PREV=0
+          fi
+          echo "previous_score=$PREV" >> $GITHUB_OUTPUT
+          echo "Previous mutation score: $PREV"
+
+      - name: Compare scores
+        id: compare
+        run: |
+          CUR=${{ steps.current.outputs.current_score }}
+          PREV=${{ steps.previous.outputs.previous_score }}
+
+          echo "🔍 Comparing mutation scores..."
+          echo "Previous: $PREV"
+          echo "Current:  $CUR"
+
+          if [ "$CUR" -lt "$PREV" ]; then
+            echo "Mutation score decreased! ($CUR < $PREV)"
+            exit 1
+          fi
+
+          echo "Mutation score OK or improved ($CUR ≥ $PREV)"
+
+      - name: Save new mutation score
+        if: success()
+        run: echo "${{ steps.current.outputs.current_score }}" > mutation_score.txt
+
+      - name: Commit updated mutation score
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mutation_score.txt
+          git commit -m "Update mutation score to ${{ steps.current.outputs.current_score }}" || echo "No changes to commit"
+          git push
