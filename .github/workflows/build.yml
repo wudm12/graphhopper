@@ -78,6 +78,10 @@ jobs:
         if: success()
         run: echo "${{ steps.current.outputs.current_score }}" > mutation_score.txt
 
+      - name: Rickroll on failure
+        if: failure()
+        uses: ./.github/actions/rickroll
+
 
 #      - name: Commit updated mutation score
 #        if: success()
