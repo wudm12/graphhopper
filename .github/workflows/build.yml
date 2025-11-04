@@ -37,7 +37,7 @@ jobs:
       - name: Build ${{ matrix.java-version }}
         run: mvn -B clean test
       - name: Run PIT Mutation Testing
-        run: mvn org.pitest:pitest-maven:mutationCoverage
+        run: mvn org.pitest:pitest-maven:mutationCoverage -DargLine=""
 
       - name: Extract current PIT score
         id: current
