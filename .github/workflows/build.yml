@@ -37,7 +37,7 @@ jobs:
       - name: Build ${{ matrix.java-version }}
         run: mvn -B clean test
       - name: Run PIT Mutation Testing (core module only)
-        run: mvn -pl core org.pitest:pitest-maven:mutationCoverage -DargLine=""
+        run: mvn clean install -DskipTests && mvn -pl core org.pitest:pitest-maven:mutationCoverage -DargLine=""
 
       - name: Extract current PIT score
         id: current
