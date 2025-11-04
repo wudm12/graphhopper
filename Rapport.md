@@ -118,3 +118,50 @@ Nous avons ajouté la librairie [java-faker](https://github.com/DiUS/java-faker)
     <scope>test</scope>
 </dependency>
 
+
+Tâche 3 — Modification du workflow GitHub Actions et validation du score de mutation
+
+Afin d’assurer la stabilité du projet et de suivre la qualité des tests automatisés, nous avons modifié le workflow CI/CD (.github/workflows/build.yml) pour qu’il échoue automatiquement si le score de mutation PIT diminue après un commit.
+
+Choix de conception
+
+Le plugin PIT (Pitest 1.21.1) a été intégré via la commande :
+
+mvn org.pitest:pitest-maven:mutationCoverage
+
+
+Un bug récurrent {argLine} empêchait PIT de s’exécuter sur le module graphhopper-web-api.
+Ce problème a été résolu en :
+
+forçant l’utilisation de Java 17 (version stable compatible avec PIT) ;
+
+limitant l’analyse au module core à l’aide de -pl core ;
+
+nettoyant et construisant préalablement les dépendances avec :
+
+mvn clean install -DskipTests
+
+
+Le workflow compare ensuite le score actuel avec le précédent, enregistré dans un fichier mutation_score.txt.
+S’il baisse, le processus échoue ; sinon, il le met à jour et le pousse automatiquement sur le dépôt.
+
+Validation
+
+Les exécutions locales et distantes ont permis de :
+
+confirmer le BUILD SUCCESS complet sous Java 17 ;
+
+générer un rapport PIT dans core/target/pit-reports/ contenant les fichiers index.html, mutations.xml et summary.xml ;
+
+obtenir un score de mutation de 43 % et une couverture de lignes de 69 % sur le package com.graphhopper.routing.weighting.
+
+Le rapport HTML ci-dessous prouve que la mesure du score de mutation est fonctionnelle et intégrée à la CI :
+
+Line Coverage : 69 %
+Mutation Coverage : 43 %
+Test Strength : 69 %
+
+Conclusion
+
+Cette configuration garantit que toute future régression du score de mutation sera détectée automatiquement par GitHub Actions.
+Elle renforce la qualité logicielle et la traçabilité des modifications dans le cadre du projet GraphHopper.
