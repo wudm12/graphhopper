@@ -42,9 +42,18 @@ jobs:
       - name: Extract current PIT score
         id: current
         run: |
-          SCORE=$(grep -oPm1 "(?<=<score>)[^<]+" target/pit-reports/*/summary.xml || echo 0)
+          TOTAL=$(grep -c "<mutation " core/target/pit-reports/mutations.xml)
+          KILLED=$(grep -c "detected='true'" core/target/pit-reports/mutations.xml)
+
+          if [ "$TOTAL" -gt 0 ]; then
+          SCORE=$(( 100 * KILLED / TOTAL ))
+          else
+          SCORE=0
+          fi
+
           echo "current_score=$SCORE" >> $GITHUB_OUTPUT
-          echo "Current mutation score: $SCORE"
+          echo "Current mutation score: $SCORE%"
+
 
       - name: Get previous PIT score
         id: previous
